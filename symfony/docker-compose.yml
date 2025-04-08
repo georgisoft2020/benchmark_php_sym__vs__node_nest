@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  symfony:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8123:8000"
+    environment:
+      - APP_ENV=prod
+      - DATABASE_URL=mysql://benchmark:benchmark123@mysql-symfony:3306/benchmark
+    depends_on:
+      - mysql-symfony
+    networks:
+      - symfony-network
+
+  mysql-symfony:
+    image: mysql:8.0
+    ports:
+      - "3311:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=benchmark
+      - MYSQL_USER=benchmark
+      - MYSQL_PASSWORD=benchmark123
+    volumes:
+      - mysql-symfony-data:/var/lib/mysql
+      - ./db-init:/docker-entrypoint-initdb.d
+    networks:
+      - symfony-network
+
+networks:
+  symfony-network:
+    driver: bridge
+
+volumes:
+  mysql-symfony-data:

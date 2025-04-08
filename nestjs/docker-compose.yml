@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  nestjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=mysql-nestjs
+      - DB_PORT=3306
+      - DB_USERNAME=benchmark
+      - DB_PASSWORD=benchmark123
+      - DB_DATABASE=benchmark
+    depends_on:
+      - mysql-nestjs
+    networks:
+      - nestjs-network
+
+  mysql-nestjs:
+    image: mysql:8.0
+    ports:
+      - "3314:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=benchmark
+      - MYSQL_USER=benchmark
+      - MYSQL_PASSWORD=benchmark123
+    volumes:
+      - mysql-nestjs-data:/var/lib/mysql
+      - ./db-init:/docker-entrypoint-initdb.d
+    networks:
+      - nestjs-network
+
+networks:
+  nestjs-network:
+    driver: bridge
+
+volumes:
+  mysql-nestjs-data:
