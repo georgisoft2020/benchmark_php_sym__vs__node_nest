@@ -3,3 +3,7 @@ node_modules
 benchmark_results
 /benchmark_results
 .idea
+symfony/config/packages/
+symfony/bin/
+symfony/var/
+symfony/vendor/
