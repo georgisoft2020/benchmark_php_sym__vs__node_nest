@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `benchmark_items`;
 CREATE TABLE IF NOT EXISTS `benchmark_items` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,

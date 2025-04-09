@@ -1,17 +1,26 @@
 version: '3.8'
 
 services:
-  symfony:
+  php:
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - "8123:8000"
+    volumes:
+      - .:/var/www/html
     environment:
-      - APP_ENV=prod
-      - DATABASE_URL=mysql://benchmark:benchmark123@mysql-symfony:3306/benchmark
+      DATABASE_URL: "mysql://benchmark:benchmark123@mysql-symfony:3306/benchmark"
+    networks:
+      - symfony-network
+
+  nginx:
+    image: nginx:stable
+    ports:
+      - "8123:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - .:/var/www/html
     depends_on:
-      - mysql-symfony
+      - php
     networks:
       - symfony-network
 
